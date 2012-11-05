@@ -1,4 +1,4 @@
-Lucene/Solr SiteRank Function
+Lucene/Solr Site Rank Function
 =========================
 
 Developer
@@ -11,7 +11,7 @@ Developer
 License
 -----------
 
-[Apache 2.0][1].
+[Apache 2.0][1]
 
 Summary
 -----------
@@ -48,7 +48,7 @@ Parameters
 ----------
 
 * <strong><code>doCache</code></strong>: True if caching should be enabled
-* <strong><code>cacheSpec</code></strong>: Specification for the cache, in [Guava CacheBuilderSpec format][10].
+* <strong><code>cacheSpec</code></strong>: Configuration for the cache, in [Guava CacheBuilderSpec format][10].
 * <strong><code>extractDomainFromUrl</code></strong>: Are you inputting full URLs, like <code>http://www.google.com/mail</code>?  Then set this to true.  Otherwise, if you're inputting stripped-down domain or host names, such as <code>google.com</code>, then set it to false. This is used as a performance improvement at the caching level, so we don't have to look up the same domain over and over again just because the URL is different.
 
 Usage
@@ -73,9 +73,9 @@ See [my blog post on boosting][11] for more details about boosting in Solr.
 Notes and TODOs
 ----------
 
-Note that I actually don't know how many sites total are ranked in Alexa, so I just start with a reasonable guess (50,000,000) and then increase my guess if we find sites that are lower ranked.
+Note that I actually don't know how many total sites are ranked in Alexa, so I just start with a reasonable guess (50,000,000) and then increase my guess if we find sites that are lower ranked.
 
-In the future, I'd also like to expand this module to output site ranks from other sources than Alexa, including custom config files.
+In the future, I'd also like to expand this module to output rankings from other sources than Alexa, including custom config files.
 
 Compile it yourself
 ----------
