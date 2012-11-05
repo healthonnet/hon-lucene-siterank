@@ -5,21 +5,94 @@ import java.util.Map;
 
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.queryParser.ParseException;
+import org.apache.solr.common.util.NamedList;
 import org.apache.solr.search.FunctionQParser;
 import org.apache.solr.search.ValueSourceParser;
 import org.apache.solr.search.function.DocValues;
 import org.apache.solr.search.function.ValueSource;
+import org.healthonnet.lucene.siterank.source.AlexaSiteRankSource;
+import org.healthonnet.lucene.siterank.source.CachingSiteRankSource;
+import org.healthonnet.lucene.siterank.source.SiteRankSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+/**
+ * ValueSourceParser that uses the site rank of a given URL to produce a double between 0.0 and 1.0.  Probably
+ * you will want to wrap the output of this function in an exp() function or something, 
+ * in order to smooth the distribution.  So the recommended usage is e.g. bf=exp(siterank(myDomainField))
+ *
+ * The output score is a combination of the rank and the total number of sites, equaling
+ * (totalNum - (rank -1)) / totalNum
+ * 
+ * For instance, the 1st ranked site out of 1000 would give 1.0, and the last-ranked would give (1/1000) = 0.0001.
+ * Unranked sites return 0.0.
+ * 
+ * @author nolan
+ *
+ */
 public class SiteRankSourceParser extends ValueSourceParser {
 
+    private static final Logger LOG = LoggerFactory.getLogger(SiteRankSourceParser.class);
+    
+    private static enum Params {
+        doCache, cacheSpec, extractDomainFromUrl;
+    }
+    
+    /**
+     * @see http://docs.guava-libraries.googlecode.com/git/javadoc/com/google/common/cache/CacheBuilderSpec.html
+     * for how to build this spec.
+     * 
+     * These are supposed to be sensible defaults for a no-config SiteRankSourceParser.
+     */
+    private static final String DEFAULT_CACHE_SPEC = "concurrencyLevel=16,maximumSize=8192,softValues";
+    
+    private SiteRankSource siteRankSource;
+    
+    @SuppressWarnings("rawtypes")
+    @Override
+    public void init(NamedList args) {
+        super.init(args);
+        
+        Object doCacheObject = args.get(Params.doCache.name());
+        
+        // doCache is true by default
+        boolean doCache = doCacheObject == null 
+                || !(doCacheObject instanceof Boolean) 
+                || ((Boolean)doCacheObject);
+        
+        Object cacheSpecObject = args.get(Params.cacheSpec.name());
+        
+        String cacheSpec = cacheSpecObject != null && cacheSpecObject instanceof String 
+                ? (String) cacheSpecObject 
+                : DEFAULT_CACHE_SPEC;
+                
+        Object extractDomainObject = args.get(Params.extractDomainFromUrl.name());
+        
+        // extract domain from url is false by default
+        boolean extractDomainFromUrl = extractDomainObject != null
+                && (extractDomainObject instanceof Boolean)
+                && ((Boolean)extractDomainObject);
+        
+        // TODO: make Alexa vs. some other source configurable
+        siteRankSource = new AlexaSiteRankSource();
+        
+        if (doCache) {
+            siteRankSource = new CachingSiteRankSource(siteRankSource, cacheSpec);
+        }
+        
+        siteRankSource.setExtractDomainFromUrl(extractDomainFromUrl);
+        
+        LOG.info("Initializing SiteRankSourceParser with " + siteRankSource);
+    }
+    
     @Override
     public ValueSource parse(FunctionQParser functionQParser) throws ParseException {
         ValueSource source = functionQParser.parseValueSource();
         String val = functionQParser.parseArg();
         return new SiteRankFunction(source, val);
     }
-    
-    private static class SiteRankFunction extends ValueSource {
+
+    private class SiteRankFunction extends ValueSource {
 
         private static final long serialVersionUID = -1816500469014846528L;
 
@@ -42,33 +115,38 @@ public class SiteRankSourceParser extends ValueSourceParser {
 
                 @Override
                 public short shortVal(int doc) {
-                    return (short)intVal(doc);
+                    return (short)doubleVal(doc);
                 }
 
                 @Override
                 public float floatVal(int doc) {
-                    return (float)intVal(doc);
+                    return (float)doubleVal(doc);
                 }
 
                 @Override
                 public int intVal(int doc) {
-                    String url = docValues.strVal(doc);
-                    return SiteRankHelper.getRank(url);
+                    return (int)doubleVal(doc);
                 }
 
                 @Override
                 public long longVal(int doc) {
-                    return (long)intVal(doc);
+                    return (long)doubleVal(doc);
                 }
 
                 @Override
                 public double doubleVal(int doc) {
-                    return (double)intVal(doc);
+                    SiteRankInfo siteRankInfo = siteRankSource.getRankInfo(docValues.strVal(doc));
+                    if (siteRankInfo.isSiteFound()) {
+                        int total = siteRankInfo.getTotalNumSites();
+                        int rank = siteRankInfo.getRank();
+                        return ((1.0 * total) - (rank - 1)) / total;
+                    }
+                    return 0.0;
                 }
 
                 @Override
                 public String strVal(int doc) {
-                    return String.valueOf(intVal(doc));
+                    return String.valueOf(doubleVal(doc));
                 }
             };
         }
@@ -85,7 +163,7 @@ public class SiteRankSourceParser extends ValueSourceParser {
 
         @Override
         public String description() {
-            return "SiteRank (siterank) function";
+            return "siterank function";
         }
     }
 }

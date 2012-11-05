@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ALEXA VER="0.9" URL="webmd.com/" HOME="0" AID="=">
+<DMOZ>
+<SITE BASE="webmd.com/" TITLE="WebMD" DESC="Resource for consumers, physicians, nurses, and educators. Includes news, chat forums, health quizzes and consumer product updates.">
+<CATS>
+<CAT ID="Top/Health" TITLE="English/Health" CID="451956"/>
+</CATS>
+</SITE>
+</DMOZ>
+<SD>
+<POPULARITY URL="webmd.com/" TEXT="507" SOURCE="panel"/>
+<REACH RANK="430"/>
+<RANK DELTA="-25"/>
+<COUNTRY CODE="US" NAME="United States" RANK="156"/>
+</SD>
+</ALEXA>

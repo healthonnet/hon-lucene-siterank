@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ALEXA VER="0.9" URL="google.com/" HOME="0" AID="=">
+
+<KEYWORDS>
+<KEYWORD VAL="Mountain View"/>
+</KEYWORDS><DMOZ>
+<SITE BASE="google.com/" TITLE="Google" DESC="Enables users to search the world's information, including webpages, images, and videos. Offers unique features and search technology.">
+<CATS>
+<CAT ID="Top/Computers/Internet/Searching/Search_Engines/Google" TITLE="Search Engines/Google" CID="374822"/>
+<CAT ID="Top/Regional/North_America/United_States/California/Localities/M/Mountain_View/Business_and_Economy/Industrial/Computers_and_Internet" TITLE="Industrial/Computers and Internet" CID="625367"/>
+<CAT ID="Top/World/Français/Informatique/Internet/Recherche/Moteurs_de_recherche/Google" TITLE="Moteurs de recherche/Google" CID="247347"/>
+<CAT ID="Top/World/Arabic/إقليمـي/الشرق_الأوسط/السعودية/تجارة_و_أقتصاد/كمبيوتر_و_إنترنت/محركات_بحث" TITLE="كمبيوتر و إنترنت/محركات بحث" CID="204954"/>
+</CATS>
+</SITE>
+</DMOZ>
+<SD>
+<POPULARITY URL="google.com/" TEXT="2" SOURCE="panel"/>
+<REACH RANK="1"/>
+<RANK DELTA="+1"/>
+<COUNTRY CODE="US" NAME="United States" RANK="1"/>
+</SD>
+</ALEXA>
