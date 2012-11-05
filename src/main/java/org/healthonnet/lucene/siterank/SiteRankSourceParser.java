@@ -19,12 +19,14 @@ import org.slf4j.LoggerFactory;
 /**
  * ValueSourceParser that uses the site rank of a given URL to produce a double between 0.0 and 1.0.  Probably
  * you will want to wrap the output of this function in an exp() function or something, 
- * in order to smooth the distribution.  So the recommended usage is e.g. bf=exp(siterank(myDomainField))
- *
- * The output score is a combination of the rank and the total number of sites, equaling
- * (totalNum - (rank -1)) / totalNum
+ * in order to smooth the distribution.
  * 
- * For instance, the 1st ranked site out of 1000 would give 1.0, and the last-ranked would give (1/1000) = 0.0001.
+ * <p/>So the recommended usage is e.g. <code>bf=exp(siterank(myDomainField))</code>
+ *
+ * <p/>The output score is a combination of the rank and the total number of sites, equaling
+ * <code>(totalNum - (rank -1)) / totalNum</code>
+ * 
+ * <p/>For instance, the 1st ranked site out of 1000 would give 1.0, and the last-ranked would give (1/1000) = 0.0001.
  * Unranked sites return 0.0.
  * 
  * @author nolan
@@ -88,8 +90,8 @@ public class SiteRankSourceParser extends ValueSourceParser {
     @Override
     public ValueSource parse(FunctionQParser functionQParser) throws ParseException {
         ValueSource source = functionQParser.parseValueSource();
-        String val = functionQParser.parseArg();
-        return new SiteRankFunction(source, val);
+        String url = functionQParser.parseArg();
+        return new SiteRankFunction(source, url);
     }
 
     private class SiteRankFunction extends ValueSource {
