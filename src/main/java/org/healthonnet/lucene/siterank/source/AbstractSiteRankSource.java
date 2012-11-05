@@ -54,11 +54,9 @@ public abstract class AbstractSiteRankSource implements SiteRankSource {
         if (extractDomainFromUrl) {
             try {
                 URI uri = new URI(inputUrl);
-                inputUrl = Preconditions.checkNotNull(uri.getHost(), 
-                        "String %s is not a valid URL. " +
-                        "Use extractDomainFromUrl=false if you're not inputting full URLs", inputUrl);
+                inputUrl = Preconditions.checkNotNull(uri.getHost(), getUrlErrorMessage(inputUrl));
             } catch (URISyntaxException e) {
-                throw Throwables.propagate(e);
+                throw new RuntimeException(getUrlErrorMessage(inputUrl), e);
             }
         }
         
@@ -77,6 +75,11 @@ public abstract class AbstractSiteRankSource implements SiteRankSource {
         return new SiteRankInfo(rank, getTotal(), true);
     }
     
+    private String getUrlErrorMessage(String inputUrl) {
+        return String.format("\"%s\" is not a valid URL. " +
+                "Use extractDomainFromUrl=false if you're not inputting full URLs!", inputUrl);
+    }
+
     private int getRankInternal(String inputUrl) throws MalformedURLException, IOException {
         URL url = buildURI(inputUrl).toURL();
         
