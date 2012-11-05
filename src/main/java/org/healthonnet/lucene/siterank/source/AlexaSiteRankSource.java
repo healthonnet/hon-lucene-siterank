@@ -5,7 +5,8 @@ import java.net.URISyntaxException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.http.client.utils.URIBuilder;
+import org.apache.commons.httpclient.URIException;
+import org.apache.commons.httpclient.util.URIUtil;
 
 import com.google.common.base.Throwables;
 
@@ -23,11 +24,16 @@ public class AlexaSiteRankSource extends AbstractSiteRankSource {
     
     public URI buildURI(String url) {
         try {
-            return new URIBuilder(BASE_URL)
-                .addParameter("cli", "10")
-                .addParameter("url", url)
-                .build();
+            StringBuilder stringBuilder = new StringBuilder(BASE_URL)
+                .append("?cli=")
+                .append(URIUtil.encodeQuery("10"))
+                .append("&url=")
+                .append(URIUtil.encodeQuery(url));
+            
+            return new URI(stringBuilder.toString());
         } catch (URISyntaxException e) {
+            throw Throwables.propagate(e);
+        } catch (URIException e) {
             throw Throwables.propagate(e);
         }
     }
