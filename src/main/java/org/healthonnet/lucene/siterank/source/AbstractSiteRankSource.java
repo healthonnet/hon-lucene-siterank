@@ -54,7 +54,9 @@ public abstract class AbstractSiteRankSource implements SiteRankSource {
         if (extractDomainFromUrl) {
             try {
                 URI uri = new URI(inputUrl);
-                inputUrl = Preconditions.checkNotNull(uri.getHost(), "String %s is not a valid URL", inputUrl);
+                inputUrl = Preconditions.checkNotNull(uri.getHost(), 
+                        "String %s is not a valid URL. " +
+                        "Use extractDomainFromUrl=false if you're not inputting full URLs", inputUrl);
             } catch (URISyntaxException e) {
                 throw Throwables.propagate(e);
             }

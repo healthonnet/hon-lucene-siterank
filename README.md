@@ -38,7 +38,7 @@ Next, add the following definition to your <code>solrconfig.xml</code>:
 <valueSourceParser name="siterank" class="org.healthonnet.lucene.siterank.SiteRankSourceParser">
     <bool name="doCache">true</bool>
     <str name="cacheSpec">concurrencyLevel=16,maximumSize=8192,softValues</str>
-    <bool name="extractDomainFromUrl">false</bool>
+    <bool name="extractDomainFromUrl">true</bool>
 </valueSourceParser>
 ```
 

@@ -70,10 +70,10 @@ public class SiteRankSourceParser extends ValueSourceParser {
                 
         Object extractDomainObject = args.get(Params.extractDomainFromUrl.name());
         
-        // extract domain from url is false by default
-        boolean extractDomainFromUrl = extractDomainObject != null
-                && (extractDomainObject instanceof Boolean)
-                && ((Boolean)extractDomainObject);
+        // extract domain from url is true by default
+        boolean extractDomainFromUrl = extractDomainObject == null
+                || !(extractDomainObject instanceof Boolean)
+                || ((Boolean)extractDomainObject);
         
         // TODO: make Alexa vs. some other source configurable
         siteRankSource = new AlexaSiteRankSource();
