@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.healthonnet.lucene</groupId>
 	<artifactId>hon-lucene-siterank</artifactId>
-	<version>1.0</version>
+	<version>1.1</version>
 	<name>HON Lucene/Solr Siterank function</name>
 	<description>Simple function, siterank(), which returns the Alexa site rank of the given URL.</description>
 	<dependencies>

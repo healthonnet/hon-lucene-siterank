@@ -139,11 +139,9 @@ public class SiteRankSourceParser extends ValueSourceParser {
                 public double doubleVal(int doc) {
                     SiteRankInfo siteRankInfo = siteRankSource.getRankInfo(docValues.strVal(doc));
                     if (siteRankInfo.isSiteFound()) {
-                        int total = siteRankInfo.getTotalNumSites();
-                        int rank = siteRankInfo.getRank();
-                        return ((1.0 * total) - (rank - 1)) / total;
+                        return 1.0 / siteRankInfo.getRank(); //reciprocal rank
                     }
-                    return 0.0;
+                    return 0.0; // not found
                 }
 
                 @Override

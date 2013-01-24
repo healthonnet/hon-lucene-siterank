@@ -16,12 +16,6 @@ public class AlexaSiteRankSource extends AbstractSiteRankSource {
     private static final String BASE_URL = "http://data.alexa.com/data";
     private static final Pattern SITE_RANK_PATTERN = Pattern.compile("RANK=\"(\\d+)\"");
     
-    // TODO: actually determine how many sites are in Alexa... for now, we just guess, and update our assumption
-    // in case we see a site that's even lower
-    private static final int INITIAL_TOTAL_NUM_SITES = 50000000;
-    
-    private int totalNumSites = INITIAL_TOTAL_NUM_SITES;
-    
     public URI buildURI(String url) {
         try {
             StringBuilder stringBuilder = new StringBuilder(BASE_URL)
@@ -42,16 +36,9 @@ public class AlexaSiteRankSource extends AbstractSiteRankSource {
         Matcher matcher = SITE_RANK_PATTERN.matcher(result);
         if (matcher.find()) {
             int rank = Integer.valueOf(matcher.group(1));
-            if (rank > totalNumSites) {
-                totalNumSites = rank; // update our guess
-            }
             return rank;
         }
         return defaultValue;
     }
 
-    @Override
-    protected int getTotal() {
-        return totalNumSites;
-    }
 }

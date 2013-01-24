@@ -41,12 +41,6 @@ public abstract class AbstractSiteRankSource implements SiteRankSource {
      */
     protected abstract int parseRank(String result, int defaultValue);
     
-    /**
-     * The total number of URLs ranked by this ranking source.
-     * @return
-     */
-    protected abstract int getTotal();
-    
     public SiteRankInfo getRankInfo(String inputUrl) {
         
         int rank = DEFAULT_VALUE;
@@ -70,9 +64,9 @@ public abstract class AbstractSiteRankSource implements SiteRankSource {
         }
         
         if (rank == DEFAULT_VALUE) { // not found
-            return new SiteRankInfo(0, getTotal(), false);
+            return new SiteRankInfo(0, false);
         }
-        return new SiteRankInfo(rank, getTotal(), true);
+        return new SiteRankInfo(rank, true);
     }
     
     private String getUrlErrorMessage(String inputUrl) {
