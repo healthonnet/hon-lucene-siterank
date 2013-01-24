@@ -56,6 +56,7 @@ Usage
 ----------
 
 This module defines a new function called <code>siterank()</code>.  
+
 The function takes in a string (either a full URL or a domain/host - see above) 
 and outputs the **reciprocal rank** of the site, which is a double between 0.0 and 1.0. 
 0.0 is returned if the site is not found in the ranking.
@@ -78,7 +79,7 @@ and to deal with cases where the function returns 0.0.  So the recommended usage
 
 See [my blog post on boosting][11] for more details about boosting in Solr.
 
-Notes and TODOs
+Future work
 ----------
 
 In the future, I'd like to expand this module to output rankings from other sources than Alexa, including custom config files.
