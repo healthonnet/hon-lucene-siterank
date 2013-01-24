@@ -27,7 +27,7 @@ Setup
 
 First off, put the following JARs into your Solr's lib/ directory:
 
-* [hon-lucene-siterank-1.0.jar][8]
+* [hon-lucene-siterank-1.1.jar][8]
 * [guava-13.0.1.jar][9]
 
 (Yes, I'm requiring Google Guava for this.  It helps protect my sanity when I code in Java these days.)
@@ -42,7 +42,8 @@ Next, add the following definition to your <code>solrconfig.xml</code>:
 </valueSourceParser>
 ```
 
-Shown above are all the configuration parameters with their default values.  You can leave them out if you're okay with the defaults.
+Shown above are all the configuration parameters with their default values.  
+You can leave them out if you're okay with the defaults.
 
 Parameters
 ----------
@@ -54,13 +55,20 @@ Parameters
 Usage
 ----------
 
-This module defines a new function called <code>siterank()</code>.  The function takes in a string (either a full URL or a domain/host - see above) and outputs a double between 0.0 and 1.0.  The double is computed as follows:
+This module defines a new function called <code>siterank()</code>.  
+The function takes in a string (either a full URL or a domain/host - see above) 
+and outputs the **reciprocal rank** of the site, which is a double between 0.0 and 1.0. 
+0.0 is returned if the site is not found in the ranking.
 
-<code>(totalNum - (rank - 1)) / totalNum</code>
+The reciprocal rank is simply:
 
-...where <code>totalNum</code> is the total number of sites ranked by Alexa, and <code>rank</code> is the rank of the given URL.  So the #1 ranked site (currently Google) will have a score of 1.0, and the lowest-ranked site would have a score of <code>1.0/totalNum</code>.  Unranked sites return 0.0.
+<code>1.0 / rank</code>
 
-Most likely you will want to wrap this function in something like <code>exp()</code> to smooth the values, and to deal with cases where the function returns 0.0.  So the recommended usage is:
+...so e.g. Google will probably have a reciprocal rank of 1.0 (1.0 / 1.0), and MyCoolHipsterSiteNobodyKnowsAbout.com 
+might have a reciprocal rank of 0.0000000198867735 (1.0 / 50284678).
+
+Most likely you will want to wrap this function in something like <code>exp()</code> to smooth the values, 
+and to deal with cases where the function returns 0.0.  So the recommended usage is:
 
 <code>exp(siterank(myUrlOrHostField))</code>
 
@@ -73,9 +81,7 @@ See [my blog post on boosting][11] for more details about boosting in Solr.
 Notes and TODOs
 ----------
 
-Note that I actually don't know how many total sites are ranked in Alexa, so I just start with a reasonable guess (50,000,000) and then increase my guess if we find sites that are lower ranked.
-
-In the future, I'd also like to expand this module to output rankings from other sources than Alexa, including custom config files.
+In the future, I'd like to expand this module to output rankings from other sources than Alexa, including custom config files.
 
 Compile it yourself
 ----------
@@ -93,7 +99,7 @@ mvn install
 [5]: http://infolab.stanford.edu/~backrub/google.html
 [6]: http://www.hon.ch
 [7]: http://nolanlawson.com
-[8]: https://github.com/downloads/HON-Khresmoi/hon-lucene-siterank/hon-lucene-siterank-1.0.jar
+[8]: http://nolanlawson.s3.amazonaws.com/dist/org.healthonnet.lucene.siterank/release/1.1/hon-lucene-siterank-1.1.jar
 [9]: http://search.maven.org/remotecontent?filepath=com/google/guava/guava/13.0.1/guava-13.0.1.jar
 [10]: http://docs.guava-libraries.googlecode.com/git/javadoc/com/google/common/cache/CacheBuilderSpec.html
 [11]: http://nolanlawson.com/2012/06/02/comparing-boost-methods-in-solr/
