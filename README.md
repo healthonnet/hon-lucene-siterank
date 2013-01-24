@@ -65,7 +65,7 @@ The reciprocal rank is simply:
 <code>1.0 / rank</code>
 
 ...so e.g. Google will probably have a reciprocal rank of 1.0 (1.0 / 1.0), WebMD might have 0.00239234 (1/0 / 418) and MyCoolHipsterSiteNobodyKnowsAbout.com 
-might have of 0.0000000198867735 (1.0 / 50284678).
+might have 0.0000000198867735 (1.0 / 50284678).
 
 Most likely you will want to wrap this function in something like <code>exp()</code> to smooth the values, 
 and to deal with cases where the function returns 0.0.  So the recommended usage is:
