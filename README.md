@@ -42,8 +42,7 @@ Next, add the following definition to your <code>solrconfig.xml</code>:
 </valueSourceParser>
 ```
 
-Shown above are all the configuration parameters with their default values.  
-You can leave them out if you're okay with the defaults.
+Shown above are all the configuration parameters with their default values. You can leave them out if you're okay with the defaults.
 
 Parameters
 ----------
@@ -65,8 +64,8 @@ The reciprocal rank is simply:
 
 <code>1.0 / rank</code>
 
-...so e.g. Google will probably have a reciprocal rank of 1.0 (1.0 / 1.0), and MyCoolHipsterSiteNobodyKnowsAbout.com 
-might have a reciprocal rank of 0.0000000198867735 (1.0 / 50284678).
+...so e.g. Google will probably have a reciprocal rank of 1.0 (1.0 / 1.0), WebMD might have 0.00239234 (1/0 / 418) and MyCoolHipsterSiteNobodyKnowsAbout.com 
+might have of 0.0000000198867735 (1.0 / 50284678).
 
 Most likely you will want to wrap this function in something like <code>exp()</code> to smooth the values, 
 and to deal with cases where the function returns 0.0.  So the recommended usage is:
@@ -76,6 +75,9 @@ and to deal with cases where the function returns 0.0.  So the recommended usage
 ...which you can use as a boost function, e.g.
 
 <code>http://mySite:8983/solr/select?q={!boost b=exp(siterank(myUrlOrHostField))}*:*</code>
+
+So for instance, in the above examples, Google would have a score of 2.71828, WebMD would get 1.00239520844, and the hipster site would
+get 1.00000001989.  Tweak the formula as you see fit.
 
 See [my blog post on boosting][11] for more details about boosting in Solr.
 
